@@ -1,7 +1,7 @@
-INSERT INTO `{TABLE_PREFIX}mod_wbs_guestbook_rates` (`name`, `position`) VALUES
+INSERT INTO `{TABLE_PREFIX}mod_wbs_guestbook_rates` (`rate_name`, `rate_position`) VALUES
 ('Отвращение', 1),
 ('Не нравится', 2),
-('Насмехаюсь', 3)
+('Насмехаюсь', 3),
 ('Равнодушен', 4),
 ('Интересно', 5),
 ('Нравится', 6),
