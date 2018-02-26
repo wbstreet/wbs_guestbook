@@ -1,0 +1,30 @@
+<hr>
+
+<form>
+    {% if is_authed %}
+        <span>Имя:</span><br>
+        <input type="text" name="name">
+        <span>Фамилия:</span><br>
+        <input type="text" name="surname">
+        <span>Email:</span><br>
+        <input type="email" name="email">
+    {% endif %}
+    
+    <span>Поделитесь Вашими впечатлениями о прочитанном:</span><br>   
+    <textarea name="text"></textarea>
+    И дайте общую оценку: <select name="rate_id">
+        {% for rate in rates %}
+            <option name="{{ rate.rate_id }}">{{ rate.name }}</option>
+        {% enbdfor %}
+    </select>
+
+    <input type="button" value="Добавить отзыв" onclick="sendform('add_message', this, {data: { {{ spo }} }})">
+</form>
+
+<hr>
+
+{% for message in message %}
+    <div {% if is_admin %}data-message_id="{{ message.message_id }}" data-is_active="{{ message.is_active}}"{% endif %}>{% include "message.html" %}</div>
+{% endfor %}
+
+<hr>

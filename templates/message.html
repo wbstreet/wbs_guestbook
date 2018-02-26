@@ -1,0 +1,10 @@
+<span>{% if message.user %}{{ message.user.name }}{% else %}{{ message.name }}{% endif %} {% if message.user %}{{ message.user.surname }}{% else %}{{ message.surname }}{% endif %}</span> <br>
+Оценка: {{ message.rate_name }} <br>
+{{ message.text }} <br>
+
+{% if is_admin %}
+    <form>
+        <input type="hidden" name="message_id" value="{{ message.message_id }}">
+        <input type="button" value="Отображать/скрывать" onclick="sendform('toggle_active', this, {func_sucess:function() }{}})">
+    </form>
+{% endif %}
