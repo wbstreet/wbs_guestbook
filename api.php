@@ -26,6 +26,7 @@ if ($action == "add_message") { // совпадает с action, требуем�
     $page_id = $clsFilter->f('page_id', [['integer', 'Укажите страницу!']], 'append');
     $section_id = $clsFilter->f('section_id', [['integer', 'Укажите секцию!']], 'append');
     $obj_id = $clsFilter->f('obj_id', [['integer', '']], 'default', null);
+    if ($clsFilter->is_error()) $clsFilter->print_error();
     
     // добавляем сообщение
     
@@ -41,16 +42,35 @@ if ($action == "add_message") { // совпадает с action, требуем�
     $message_id = $clsFilter->f('message_id', [['integer', 'Укажите идентификатор сообщения!']], 'fatal');
 
     $r = $clsModGuestbook->get_messages(['guestbook_id'=>$message_id]);
-    if (gettype($r) === 'string') Сообщение не найденоprint_error($r);
-    if ($r === null) print_error('');    
+    if (gettype($r) === 'string') print_error($r);
+    if ($r === null) print_error('Сообщение не найдено');    
     $message = $r->fetchRow();
     
     $is_active = $message['is_active'] === '1' ? '0' : '1';
     
     $r = update_row($clsModGuestbook->tbl_guestbook, ['is_active'=>$is_active], "`guestbook_id`=".process_value($message_id));
-    if (gettype($r) === 'string') Сообщение не найденоprint_error($r);
+    if (gettype($r) === 'string') print_error($r);
     
     print_success("Успешно!", ['is_active'=>$is_active]);
+
+
+} else if ($action == "save_settings") {
+
+    $view_when_set_obj_id = $clsFilter->f('view_when_set_obj_id', [['1', 'Укажите опцию!']], 'append');
+    $is_active = $clsFilter->f('is_active', [['1', 'Укажите активность!']], 'append');
+    $page_id = $clsFilter->f('page_id', [['integer', 'Укажите страницу!']], 'append');
+    $section_id = $clsFilter->f('section_id', [['integer', 'Укажите секцию!']], 'append');
+    if ($clsFilter->is_error()) $clsFilter->print_error();
+
+    $fields = [
+        'is_active'=>$is_active === 'true' ? '1' : '0',
+        'view_when_set_obj_id'=>$view_when_set_obj_id === 'true' ? '1' : '0',
+    ];
+    
+    $r = update_row($clsModGuestbook->tbl_settings, $fields, "`section_id`=".process_value($section_id)." AND `page_id`=".process_value($page_id));
+    if (gettype($r) === 'string') print_error($r);
+
+    print_success("Успешно!");
     
 } else { print_error("Wrong api name!"); }
 

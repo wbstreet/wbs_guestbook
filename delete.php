@@ -14,7 +14,7 @@ if(!defined('WB_PATH')) die(header('Location: index.php'));
 
 include(__DIR__.'/lib.class.guestbook.php');
 $clsModGuestbook = new ModGuestbook($page_id, $section_id);
-$r = $clsModGuestbook->add();
+$r = $clsModGuestbook->delete();
 if (gettype($r) === 'string') {
     $admin->print_error($r);
 }

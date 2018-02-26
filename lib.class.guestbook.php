@@ -10,7 +10,8 @@ class ModGuestbook extends Addon {
     function __construct($page_id, $section_id) {
         parent::__construct('wbs_guestbook', $page_id, $section_id);
         $this->tbl_guestbook = "`".TABLE_PREFIX."mod_wbs_guestbook`";
-        $this->tbl_guestbook_rate = "`".TABLE_PREFIX."mod_wbs_guestbook_rate`";
+        $this->tbl_rate = "`".TABLE_PREFIX."mod_wbs_guestbook_rate`";
+        $this->tbl_settings = "`".TABLE_PREFIX."mod_wbs_guestbook_settings`";
     }
 
     function install() {
@@ -18,12 +19,20 @@ class ModGuestbook extends Addon {
     
     function uninstall() {
     }
+
+    function add() {
+        return insert_row($this->tbl_settings, ['section_id'=>$this->section_id, 'page_id'=>$this->page_id]);
+    }
     
-    function get_messages($sets, $only_count) {
+    function delete() {
+        return delete_row($this->tbl_settings, glue_fields(['section_id'=>$this->section_id, 'page_id'=>$this->page_id], ' AND '));
+    }
     
-        $tables = [$this->tbl_guestbook, $this->tbl_guestbook_rate];
+    function get_messages($sets, $only_count=false) {
+    
+        $tables = [$this->tbl_guestbook, $this->tbl_rate];
         
-        $where = [$this->tbl_guestbook.".`rate_id`=".$this->tbl_guestbook_rate.".`rate_id`"];
+        $where = [$this->tbl_guestbook.".`rate_id`=".$this->tbl_rate.".`rate_id`"];
         
         if (isset($sets['is_active'])) $where[] = $this->tbl_guestbook.".`is_active`=".process_value($sets['is_active']);
         if (isset($sets['rate_id']))   $where[] = $this->tbl_guestbook.".`rate_id`=".process_value($sets['rate_id']);

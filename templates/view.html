@@ -11,14 +11,14 @@
     {% endif %}
     
     <span>Поделитесь Вашими впечатлениями о прочитанном:</span><br>   
-    <textarea name="text"></textarea>
+    <textarea name="text" style="width:100%;"></textarea><br>
     И дайте общую оценку: <select name="rate_id">
         {% for rate in rates %}
-            <option name="{{ rate.rate_id }}">{{ rate.name }}</option>
-        {% enbdfor %}
+            <option name="{{ rate.rate_id }}">{{ rate.rate_name }}</option>
+        {% endfor %}
     </select>
 
-    <input type="button" value="Добавить отзыв" onclick="sendform('add_message', this, {data: { {{ spo }} }})">
+    <br><input type="button" value="Добавить отзыв" onclick="sendform('add_message', this, {data: { {{ spo }} }})">
 </form>
 
 <hr>
