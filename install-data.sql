@@ -1,4 +1,4 @@
-INSERT INTO `{TABLE_PREFIX}mod_wbs_guestbook_rates` (`rate_name`, `rate_position`) VALUES
+INSERT INTO `{TABLE_PREFIX}mod_wbs_guestbook_rate` (`rate_name`, `rate_position`) VALUES
 ('Отвращение', 1),
 ('Не нравится', 2),
 ('Насмехаюсь', 3),
