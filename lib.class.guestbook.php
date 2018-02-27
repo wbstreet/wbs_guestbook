@@ -35,6 +35,7 @@ class ModGuestbook extends Addon {
         $where = [$this->tbl_guestbook.".`rate_id`=".$this->tbl_rate.".`rate_id`"];
         
         if (isset($sets['is_active'])) $where[] = $this->tbl_guestbook.".`is_active`=".process_value($sets['is_active']);
+        if (isset($sets['is_deleted'])) $where[] = $this->tbl_guestbook.".`is_deleted`=".process_value($sets['is_deleted']);
         if (isset($sets['rate_id']))   $where[] = $this->tbl_guestbook.".`rate_id`=".process_value($sets['rate_id']);
         if (isset($sets['guestbook_id']))   $where[] = $this->tbl_guestbook.".`guestbook_id`=".process_value($sets['guestbook_id']);
         if (isset($sets['section_id']))   $where[] = $this->tbl_guestbook.".`section_id`=".process_value($sets['section_id']);

@@ -10,6 +10,8 @@ $clsModGuestbook = new ModGuestbook(null, null);
 
 if ($action == "add_message") { // совпадает с action, требуемым классом Login
 
+    $clsFilter->f('captcha', [['1', "Введите Защитный код!"], ['variants', "Введите Защитный код!", [$_SESSION['captcha']]]], 'append', '');
+
     $fields = [
         'page_id' => $clsFilter->f('page_id', [['integer', 'Укажите страницу!']], 'append'),
         'section_id' => $clsFilter->f('section_id', [['integer', 'Укажите секцию!']], 'append'),
@@ -18,6 +20,7 @@ if ($action == "add_message") { // совпадает с action, требуем�
         'is_deleted'=>'0',
         'text' => $clsFilter->f('text', [['1', 'Укажите текст!']], 'append'),
         'rate_id' => $clsFilter->f('rate_id', [['integer', 'Укажите оценку!']], 'append'),
+        'date'=>date('Y-m-d H:i:s', strtotime('+ '.TIMEZONE.' seconds')),
     ];
 
     // проверяем правильность оценки
@@ -39,13 +42,24 @@ if ($action == "add_message") { // совпадает с action, требуем�
     }
     if ($clsFilter->is_error()) $clsFilter->print_error();
 
-    $r = insert_row($clsModGuestbook->tbl_guestbook, $fields);
-    if (gettype($r) === 'string') { print_error($r); }
+    // добавляем сообщение
 
-    $r = $clsModGuestbook->get_messages(['guestbook_id'=>$database->getLastInsertId()]);
+    $message_id = insert_row_uniq_deletable($clsModGuestbook->tbl_guestbook, $fields, null, 'guestbook_id');
+    //$r = insert_row($clsModGuestbook->tbl_guestbook, $fields);
+    if (gettype($message_id) === 'string') { print_error($message_id); }
+
+    // вынимаем сообщение
+
+    $r = $clsModGuestbook->get_messages(['guestbook_id'=>$message_id]);
     if (gettype($r) === 'string') { print_error($r); }
     if ($r === null) print_error('Сообщение не найдено!');
-    $message = $clsModGuestbook->render('message.html', ['message'=>$r->fetchRow(), ], true);;
+    $message = $r->fetchRow();
+
+    if ($admin->is_authenticated()) $message['user'] = $user;
+
+    // отображаем
+
+    $message = $clsModGuestbook->render('message.html', ['message'=>$message], true);;
 
     print_success("Успешно!", ['data'=>["message"=>$message]]);
 
@@ -68,6 +82,17 @@ if ($action == "add_message") { // совпадает с action, требуем�
     
     print_success("Успешно!", ['data'=>['is_active'=>$is_active]]);
 
+} else if ($action == "delete_message") {
+
+    check_auth();
+    if ($admin->get_user_id() !== '1') print_error('Нет доступа');
+
+    $message_id = $clsFilter->f('message_id', [['integer', 'Укажите идентификатор сообщения!']], 'fatal');
+
+    $r = update_row($clsModGuestbook->tbl_guestbook, ['is_deleted'=>'1'], "`guestbook_id`=".process_value($message_id));
+    if (gettype($r) === 'string') print_error($r);
+
+    print_success("Успешно!");
 
 } else if ($action == "save_settings") {
 

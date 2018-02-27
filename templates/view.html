@@ -23,13 +23,18 @@
         {% for rate in rates %}
             <option value="{{ rate.rate_id }}" {% if rate.rate_id == 6 %}selected{% endif %}>{{ rate.rate_name }}</option>
         {% endfor %}
-    </select>
+    </select><br>
+
+    <div>
+        <span style="text-align: right;">Защита от спама:</span>
+        <span class="captcha">[[captcha?part=image]] = [[captcha?part=input]]</span>
+    </div>
 
     <input type="button" value="Добавить отзыв" onclick="sendform(this, 'add_message', {func_success: function(res) {
         var div = document.createElement('div');
         div.innerHTML = res.data.message;
         document.getElementById('guestbook').insertBefore(div, document.getElementById('guestbook').firstChild);
-    }, data: { {{ spo }} }, {{url_api}} });">
+    }, data: { {{ spo }} }, {{url_api}}, wb_captcha_img:this.parentElement.querySelector('.captcha > img') });">
 </form>
 
 <hr>

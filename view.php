@@ -26,7 +26,13 @@ if ($settings['is_active'] === '1' && $show) {
     if ($obj_id === '') $obj_id = null;
     
     $messages = [];
-    $sets = ['section_id'=>$section_id, 'page_id'=>$page_id, 'order_by'=>$clsModGuestbook->tbl_guestbook.".`date`", 'order_dir'=>'DESC'];
+    $sets = [
+        'section_id'=>$section_id,
+        'page_id'=>$page_id,
+        'order_by'=>$clsModGuestbook->tbl_guestbook.".`date`",
+        'order_dir'=>'DESC',
+        'is_deleted'=>'0',
+    ];
     if ($settings['view_when_set_obj_id'] === '1') $sets['obj_id'] = $_GET['obj_id'];
     if (!$is_admin) $sets['is_active'] = '1';
     $r = $clsModGuestbook->get_messages($sets);

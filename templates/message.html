@@ -9,6 +9,7 @@
         <form>
             <input type="hidden" name="message_id" value="{{ message.guestbook_id }}">
             <input type="button" value="Отображать/скрывать" onclick="sendform(this, 'toggle_active', { {{ url_api }}, arg_func_success: this, func_success:function(res, btn) {btn.closest('div').dataset.is_active=res.data.is_active;}})">
+            <input type="button" value="Удалить" onclick="sendform(this, 'delete_message', { {{ url_api }}, arg_func_success: this, func_success:function(res, btn) {btn.closest('div').parentElement.remove();}})">
         </form>
     {% endif %}
 </div>
