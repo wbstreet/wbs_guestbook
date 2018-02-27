@@ -28,7 +28,7 @@ class ModGuestbook extends Addon {
         return delete_row($this->tbl_settings, glue_fields(['section_id'=>$this->section_id, 'page_id'=>$this->page_id], ' AND '));
     }
     
-    function get_messages($sets, $only_count=false) {
+    /*function get_messages($sets, $only_count=false) {
     
         $tables = [$this->tbl_guestbook, $this->tbl_rate];
         
@@ -44,13 +44,34 @@ class ModGuestbook extends Addon {
         
         $tables = implode(',', $tables);
         $where = implode(' AND ', $where);
-        $order_limit = $this->_getobj_order_limit($sets);
+        $order_limit = getobj_order_limit($sets);
         $select = $only_count ? "COUNT($this->tbl_guestbook.guestbook_id) AS count" : "*";
         $sql = "SELECT $select FROM $tables WHERE $where $order_limit";
 
-        return $this->_getobj_return($sql, $only_count);
+        return getobj_return($sql, $only_count);
+    }*/
+
+   function get_messages($sets=[], $only_count=false) {
+
+        $tables = [$this->tbl_guestbook, $this->tbl_rate];
+
+        $where = [$this->tbl_guestbook.".`rate_id`=".$this->tbl_rate.".`rate_id`"];
+
+        $where_opts = [
+                'is_active'=>$this->tbl_guestbook.".`is_active`",
+                'is_deleted'=>$this->tbl_guestbook.".`is_deleted`",
+                'rate_id'=>$this->tbl_guestbook.".`rate_id`",
+                'guestbook_id'=>$where[] = $this->tbl_guestbook.".`guestbook_id`",
+                'section_id'=>$this->tbl_guestbook.".`section_id`",
+                'page_id'=>$this->tbl_guestbook.".`page_id`",
+                'obj_id'=>$this->tbl_guestbook.".`obj_id`",
+        ];
+        
+        $where_find = ['title'=>"{$this->tbl_blog}.`title`", 'text'=>"{$this->tbl_blog}.`text`"];
+        
+        return get_obj($tables, $where, $where_opts, $where_find, $sets, $only_count);
     }
-  
+    
 }
 }
 ?>
