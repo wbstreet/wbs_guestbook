@@ -1,30 +1,70 @@
 <hr>
 
-<form>
-    {% if is_authed %}
-        <span>Имя:</span><br>
-        <input type="text" name="name">
-        <span>Фамилия:</span><br>
-        <input type="text" name="surname">
-        <span>Email:</span><br>
-        <input type="email" name="email">
+<form class="guestbook_form_add">
+
+    {% if not is_auth %}
+        <table class="adaptive_table">
+            <tr>
+                <td><span>Имя:</span></td>
+                <td><input type="text" name="name"></td>
+            </tr><tr>
+                <td><span>Фамилия:</span></td>
+                <td><input type="text" name="surname"></td>
+            </tr><tr>
+                <td><span>Email:</span></td>
+                <td><input type="email" name="email"></td>
+            </tr>
+        </table>
     {% endif %}
-    
+
     <span>Поделитесь Вашими впечатлениями о прочитанном:</span><br>   
     <textarea name="text" style="width:100%;"></textarea><br>
     И дайте общую оценку: <select name="rate_id">
         {% for rate in rates %}
-            <option name="{{ rate.rate_id }}">{{ rate.rate_name }}</option>
+            <option value="{{ rate.rate_id }}" {% if rate.rate_id == 6 %}selected{% endif %}>{{ rate.rate_name }}</option>
         {% endfor %}
     </select>
 
-    <br><input type="button" value="Добавить отзыв" onclick="sendform('add_message', this, {data: { {{ spo }} }})">
+    <input type="button" value="Добавить отзыв" onclick="sendform(this, 'add_message', {func_success: function(res) {
+        var div = document.createElement('div');
+        div.innerHTML = res.data.message;
+        document.getElementById('guestbook').insertBefore(div, document.getElementById('guestbook').firstChild);
+    }, data: { {{ spo }} }, {{url_api}} });">
 </form>
 
 <hr>
 
-{% for message in message %}
-    <div {% if is_admin %}data-message_id="{{ message.message_id }}" data-is_active="{{ message.is_active}}"{% endif %}>{% include "message.html" %}</div>
-{% endfor %}
+<div id="guestbook">
+    {% for message in messages %}
+        <div>{% include "message.html" %}</div>
+    {% endfor %}
+</div>
 
 <hr>
+
+<style>
+    div[data-is_active='0'] {
+        opacity: 0.5;
+    }
+    
+    #guestbook > div  {
+        margin: 10px 0;
+        background: #aae8be;
+    }
+
+    #guestbook > div > div {
+        padding: 7px;
+    }
+    
+    #guestbook > div .title {
+        background: #6db8ff;
+        display: block;
+        color:#ffffff;
+        padding: 4px 0 4px 10px;
+    }
+    
+    .guestbook_form_add {
+        background: #aae8be;
+        padding: 10px;
+    }
+</style>

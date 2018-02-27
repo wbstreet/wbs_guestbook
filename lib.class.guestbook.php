@@ -39,6 +39,7 @@ class ModGuestbook extends Addon {
         if (isset($sets['guestbook_id']))   $where[] = $this->tbl_guestbook.".`guestbook_id`=".process_value($sets['guestbook_id']);
         if (isset($sets['section_id']))   $where[] = $this->tbl_guestbook.".`section_id`=".process_value($sets['section_id']);
         if (isset($sets['page_id']))   $where[] = $this->tbl_guestbook.".`page_id`=".process_value($sets['page_id']);
+        if (isset($sets['obj_id']))   $where[] = $this->tbl_guestbook.".`obj_id`=".process_value($sets['obj_id']);
         
         $tables = implode(',', $tables);
         $where = implode(' AND ', $where);
